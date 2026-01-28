@@ -1,0 +1,64 @@
+services:
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+    volumes:
+      - ./data/ollama:/root/.ollama
+    ipc: host
+    environment:
+      - HSA_ENABLE_SDMA=0
+      - HSA_ENABLE_COMPRESSION=1
+      - HSA_OVERRIDE_GFX_VERSION=11.0.2
+      - HIP_VISIBLE_DEVICES=0
+      - OLLAMA_FLASH_ATTENTION=1
+      - OLLAMA_KV_CACHE_TYPE=q8_0
+      - OLLAMA_NUM_PARALLEL=1
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_CONTEXT_LENGTH=16382
+      - GIN_MODE=release
+    ports:
+      - "11434:11434"
+    restart: always
+
+  comfyui:
+    image: yanwk/comfyui-boot:rocm
+    container_name: comfyui
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+    group_add:
+      - video
+    ports:
+      - "8188:8188"
+    volumes:
+      - ./data/comfyui:/root/ComfyUI/
+    ipc: host
+    environment:
+      - HSA_ENABLE_SDMA=0
+      - HSA_ENABLE_COMPRESSION=1
+      - HSA_OVERRIDE_GFX_VERSION=11.5.1
+      - HIP_VISIBLE_DEVICES=0
+      - LISTEN_IP=0.0.0.0
+    restart: always
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    volumes:
+      - ./data/open-webui:/app/backend/data
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - ENABLE_IMAGE_GENERATION=True
+      - IMAGE_GENERATION_ENGINE=comfyui
+      - COMFYUI_BASE_URL=http://comfyui:8188/
+    depends_on:
+      - ollama
+      - comfyui
+    restart: always

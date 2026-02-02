@@ -1,0 +1,51 @@
+TransactionID,Date,Product,Category,Amount,CustomerCity
+1,2023-01-01,Smartphone,Mobile Phones,129.99,Bangkok
+2,2023-01-02,Gaming Laptop,Laptops,499.99,Singapore
+3,2023-01-03,E-book,Books,11.99,Hong Kong
+4,2023-01-04,Washing Machine,Appliances,299.99,Kuala Lumpur
+5,2023-01-05,Smartwatch,Mobile Accessories,79.99,Taipei
+6,2023-01-06,Gaming Keyboard,Mice & Keyboards,69.99,Sydney
+7,2023-01-07,TV,Home Appliances,599.99,Auckland
+8,2023-01-08,Headphones,Mobile Accessories,49.99,Melbourne
+9,2023-01-09,E-reader,Books,39.99,Perth
+10,2023-01-10,Bicycle,Cycling & Fitness,199.99,Wellington
+11,2023-01-11,Dresses,Womens Fashion,69.99,Sydney
+12,2023-01-12,Laptop Bag,Laptops Accessories,29.99,Auckland
+13,2023-01-13,Phone Case,Mobile Accessories,19.99,Brisbane
+14,2023-01-14,Gaming Mouse,Mice & Keyboards,39.99,Singapore
+15,2023-01-15,Water Bottle,Camping Gear,24.99,Hong Kong
+16,2023-01-16,Rocket Board,Cycling & Fitness,149.99,Kuala Lumpur
+17,2023-01-17,Fitness Tracker,Cycling & Fitness,69.99,Taipei
+18,2023-01-18,Gaming Chair,Sofas & Beds,299.99,Sydney
+19,2023-01-19,Bicycle Helmet,Cycling & Fitness,29.99,Auckland
+20,2023-01-20,Dress Shoes,Mens Fashion,79.99,Perth
+21,2023-01-21,Gaming Headset,Headphones & Earbuds,49.99,Singapore
+22,2023-01-22,Smartphone Screen Protector,Mobile Accessories,14.99,Brisbane
+23,2023-01-23,Kids Bike,Cycling & Fitness,199.99,Hong Kong
+24,2023-01-24,E-reader Case,Books,19.99,Sydney
+25,2023-01-25,Gaming Keyboard Backlight,Mice & Keyboards,29.99,Auckland
+26,2023-01-26,Bicycle Lock,Cycling & Fitness,39.99,Kuala Lumpur
+27,2023-01-27,T-shirt,Womens Fashion,19.99,Taipei
+28,2023-01-28,Dress Shoes(Mens),Mens Fashion,79.99,Singapore
+29,2023-01-29,Laptop Stand,Laptops Accessories,24.99,Hong Kong
+30,2023-01-30,Bicycle Helmet Kid's,Cycling & Fitness,14.99,Brisbane
+31,2023-01-31,Gaming Mousepad,Mice & Keyboards,19.99,Sydney
+32,2023-02-01,Washing Machine(Detached),Appliances,299.99,Auckland
+33,2023-02-02,Fitness Tracker Premium,Cycling & Fitness,69.99,Perth
+34,2023-02-03,Laptop Skin,Laptops Accessories,24.99,Kuala Lumpur
+35,2023-02-04,Gaming Headset Upgrade,Headphones & Earbuds,49.99,Taipei
+36,2023-02-05,Dresses Plus Size,Womens Fashion,69.99,Singapore
+37,2023-02-06,Bicycle Pump,Cycling & Fitness,29.99,Hong Kong
+38,2023-02-07,Laptop Bag With Wheels,Laptops Accessories,39.99,Auckland
+39,2023-02-08,E-book Bundle(5),Books,59.99,Sydney
+40,2023-02-09,Fitness Tracker Band,Cycling & Fitness,29.99,Brisbane
+41,2023-02-10,Gaming Keyboard With Built In Camera,Mice & Keyboards,39.99,Kuala Lumpur
+42,2023-02-11,T-shirt(Children),Womens Fashion,19.99,Singapore
+43,2023-02-12,Rocket Board Premium,Cycling & Fitness,149.99,Hong Kong
+44,2023-02-13,Dress Shoes(Boots),Mens Fashion,79.99,Taipei
+45,2023-02-14,Bicycle Helmet 2 in 1,Cycling & Fitness,39.99,Sydney
+46,2023-02-15,Laptop Stand With Cable Management,Laptops Accessories,29.99,Auckland
+47,2023-02-16,Gaming Mousepad Premium,Mice & Keyboards,29.99,Perth
+48,2023-02-17,Washing Machine 7kg,Appliances,299.99,Singapore
+49,2023-02-18,Fitness Tracker Smartwatch,Cycling & Fitness,69.99,Kuala Lumpur
+50,2023-02-19,Gaming Headset With Mic,Headphones & Earbuds,49.99,Hong Kong

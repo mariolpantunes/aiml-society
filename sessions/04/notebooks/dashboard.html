@@ -1,0 +1,107 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Digital Clock</title>
+    <style>
+        /* Dark Mode */
+        body {
+            background-color: #333;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .clock {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #555;
+        }
+
+        /* Slideshow */
+        .slideshow img {
+            width: 600px;
+            height: 400px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .slideshow img:nth-child(4) {
+            display: none;
+        }
+
+        /* Button */
+        .button {
+            background-color: #555;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="clock" id="clock"></div>
+    <div class="slideshow">
+        <img src="https://placehold.co/600x400" alt="">
+        <img src="https://placehold.co/600x400" alt="">
+        <img src="https://placehold.co/600x400" alt="">
+        <img src="https://placehold.co/600x400" alt="">
+    </div>
+    <button class="button" id="toggle-theme">Toggle Theme</button>
+
+    <script>
+        let intervalId = null;
+
+        const clockElement = document.getElementById('clock');
+        const slideshowElement = document.querySelector('.slideshow');
+
+        function updateClock() {
+            const date = new Date();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function toggleTheme() {
+            if (document.body.classList.contains('dark-mode')) {
+                document.body.classList.remove('dark-mode');
+                document.getElementById('toggle-theme').innerHTML = 'Toggle Theme';
+            } else {
+                document.body.classList.add('dark-mode');
+                document.getElementById('toggle-theme').innerHTML = 'Light Mode';
+            }
+        }
+
+        function init() {
+            updateClock();
+            intervalId = setInterval(updateClock, 1000);
+            slideshowElement.addEventListener('click', (e) => {
+                if (e.target.tagName === 'IMG') {
+                    const currentSlideIndex = parseInt(e.target.src.split('.')[1]);
+                    let newSlideIndex = (currentSlideIndex + 1) % 4;
+
+                    e.target.src = `https://placehold.co/600x400${newSlideIndex}`;
+                    if (newSlideIndex === 0) {
+                        slideshowElement.style.display = 'none';
+                    } else {
+                        slideshowElement.style.display = '';
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('load', init);
+
+        document.getElementById('toggle-theme').addEventListener('click', toggleTheme);
+    </script>
+</body>
+</html>

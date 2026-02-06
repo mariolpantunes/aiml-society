@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nord MCP Agent</title>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <style>
+            :root {
+                /* NORD PALETTE */
+                --nord0: #2e3440;
+                --nord1: #3b4252;
+                --nord3: #4c566a;
+                --nord4: #d8dee9;
+                --nord5: #e5e9f0;
+                --nord6: #eceff4;
+                --nord9: #81a1c1;
+                --nord10: #5e81ac;
+                --nord14: #a3be8c;
+                --nord15: #b48ead;
+            }
+
+            body {
+                font-family: "Rubik", "Segoe UI", sans-serif;
+                background: var(--nord6);
+                color: var(--nord0);
+                margin: 0;
+                display: flex;
+                justify-content: center; /* Center the chat window vertically */
+                align-items: center; /* Center the chat window horizontally */
+                min-height: 100vh;
+            }
+
+            .container {
+                max-width: 800px;
+                width: 90%;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header {
+                text-align: center;
+                color: var(--nord0);
+                margin: 0;
+            }
+
+            /* --- FIXED SIZE CHAT WINDOW --- */
+            #log {
+                height: 500px; /* Fixed Height */
+                overflow-y: auto; /* Scrollable */
+                scroll-behavior: smooth; /* Smooth scrolling animation */
+                background: #ffffff;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Slightly larger shadow for depth */
+                border: 1px solid var(--nord4);
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            /* Message Bubbles */
+            .msg {
+                padding: 12px 18px;
+                border-radius: 8px;
+                max-width: 85%;
+                line-height: 1.6;
+            }
+
+            .user-msg {
+                align-self: flex-end;
+                background: var(--nord10);
+                color: white;
+                box-shadow: 0 2px 4px rgba(94, 129, 172, 0.3);
+            }
+
+            .agent-msg {
+                align-self: flex-start;
+                background: var(--nord5);
+                color: var(--nord0);
+                border-left: 4px solid var(--nord9);
+            }
+
+            /* Markdown Styles */
+            .msg p {
+                margin: 0;
+            }
+            .msg code {
+                background: rgba(0, 0, 0, 0.1);
+                padding: 2px 4px;
+                border-radius: 4px;
+                font-family: monospace;
+            }
+            .msg pre {
+                background: var(--nord0);
+                color: var(--nord4);
+                padding: 10px;
+                border-radius: 6px;
+                overflow-x: auto;
+            }
+
+            /* Tools */
+            .step-container {
+                border-left: 2px solid var(--nord3);
+                margin-left: 10px;
+                padding-left: 15px;
+                font-size: 0.9em;
+                opacity: 0.9;
+            }
+            .tool-call {
+                background: var(--nord6);
+                border: 1px solid var(--nord15);
+                color: var(--nord15);
+                padding: 8px;
+                border-radius: 6px;
+                font-family: monospace;
+                margin: 5px 0;
+            }
+            .tool-result {
+                background: var(--nord6);
+                border: 1px solid var(--nord14);
+                color: var(--nord0);
+                padding: 8px;
+                border-radius: 6px;
+                margin: 5px 0;
+                max-height: 150px;
+                overflow-y: auto;
+                font-size: 0.85rem;
+            }
+
+            /* Input Area */
+            .input-area {
+                display: flex;
+                gap: 10px;
+                background: white;
+                padding: 10px;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            }
+
+            input {
+                flex-grow: 1;
+                border: 2px solid var(--nord4);
+                border-radius: 8px;
+                outline: none;
+                font-size: 16px;
+                padding: 10px;
+                color: var(--nord0);
+                transition: border-color 0.2s;
+            }
+            input:focus {
+                border-color: var(--nord9);
+            }
+            button {
+                background: var(--nord10);
+                color: white;
+                border: none;
+                padding: 10px 25px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: background 0.2s;
+            }
+            button:hover {
+                background: var(--nord9);
+            }
+            button:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                background: var(--nord3);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h2>❄️ Nord Agent</h2>
+            </div>
+
+            <div id="log">
+                <div class="agent-msg msg">
+                    Hello! I am your AI assistant. How can I help you today?
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input
+                    id="q"
+                    type="text"
+                    placeholder="Type your message..."
+                    onkeypress="if (event.key === 'Enter') ask();"
+                />
+                <button id="btn" onclick="ask()">Send</button>
+            </div>
+        </div>
+
+        <script>
+            let sessionId = localStorage.getItem("agent_session_id");
+            if (!sessionId) {
+                sessionId = crypto.randomUUID();
+                localStorage.setItem("agent_session_id", sessionId);
+            }
+
+            // --- AUTO SCROLL LOGIC ---
+            const log = document.getElementById("log");
+
+            // Function to force scroll to bottom
+            const scrollToBottom = () => {
+                log.scrollTop = log.scrollHeight;
+            };
+
+            // Observer: Watches for ANY change in the log (new messages) and scrolls
+            const observer = new MutationObserver(scrollToBottom);
+            observer.observe(log, {
+                childList: true,
+                subtree: true,
+                characterData: true,
+            });
+
+            async function ask() {
+                const input = document.getElementById("q");
+                const btn = document.getElementById("btn");
+                const query = input.value.trim();
+
+                if (!query) return;
+
+                input.value = "";
+                btn.disabled = true;
+
+                // Add User Message
+                log.innerHTML += `<div class="user-msg msg">${marked.parse(query)}</div>`;
+
+                // Add Thinking Container
+                const agentContainer = document.createElement("div");
+                agentContainer.className = "step-container";
+                agentContainer.innerHTML = "<i>Thinking...</i>";
+                log.appendChild(agentContainer);
+
+                // Scroll happens automatically thanks to Observer, but we call it once to be sure
+                scrollToBottom();
+
+                try {
+                    const res = await fetch("/ask", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            query: query,
+                            session_id: sessionId,
+                        }),
+                    });
+                    const data = await res.json();
+
+                    agentContainer.innerHTML = "";
+
+                    data.steps.forEach((s) => {
+                        if (s.role === "tool_call") {
+                            agentContainer.innerHTML += `
+                        <div class="tool-call">
+                            <b>🛠️ ${s.name}</b><br>
+                            <span style="opacity:0.8">${JSON.stringify(s.args)}</span>
+                        </div>`;
+                        } else if (s.role === "tool_result") {
+                            agentContainer.innerHTML += `
+                        <div class="tool-result">
+                            <b>✅ Output:</b><br>${s.result}
+                        </div>`;
+                        } else if (s.role === "final") {
+                            const htmlContent = marked.parse(s.content);
+                            log.innerHTML += `<div class="agent-msg msg">${htmlContent}</div>`;
+                        }
+                    });
+                } catch (err) {
+                    agentContainer.innerHTML = `<div class="tool-call" style="background:#BF616A; color:white; border:none;">Error: ${err.message}</div>`;
+                }
+
+                btn.disabled = false;
+                // Final scroll to catch any rendering lag
+                setTimeout(scrollToBottom, 100);
+            }
+        </script>
+    </body>
+</html>

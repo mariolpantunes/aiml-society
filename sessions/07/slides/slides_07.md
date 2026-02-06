@@ -3,7 +3,7 @@ title: AI in Society and Public Services
 subtitle: "Session 7: Ethical AI in Public Services"
 author: Mário Antunes
 institute: Universidade de Aveiro
-date: February 04, 2026
+date: February 06, 2026
 colorlinks: true
 paginate: true
 highlight-style: tango
